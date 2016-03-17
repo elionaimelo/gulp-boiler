@@ -5,8 +5,8 @@
 1. Clone the project and run the [NPM](https://npmjs.org/)
 
 	``` bash
-	git clone git@github.com:LFeh/grunt-boilerplate.git
-	cd LFeh/grunt-boilerplate
+	git clone git@github.com:elionaimelo/gulp-boiler
+	cd gulp-boiler
 	npm install
 	grunt w
 	```
