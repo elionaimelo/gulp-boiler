@@ -8,5 +8,5 @@
 	git clone git@github.com:elionaimelo/gulp-boiler
 	cd gulp-boiler
 	npm install
-	grunt w
+	gulp
 	```
