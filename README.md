@@ -10,3 +10,17 @@
 	npm install
 	gulp
 	```
+
+
+Tarefa padrão
+
+	``` bash
+	gulp
+	```
+	
+	
+deploy
+
+    ``` bash
+    	gulp deploy
+    	```
