@@ -38,7 +38,7 @@ gulp.task('browserSync', function() {
 //compressing images & handle SVG files
 gulp.task('images', function(tmp) {
     gulp.src(['app/images/*.jpg', 'app/images/*.png'])
-        //prevent pipe breaking caused by errors from gulp plugins
+    //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
         .pipe(imagemin({ optimizationLevel: 5, progressive: true, interlaced: true }))
         .pipe(gulp.dest('app/images'));
@@ -46,8 +46,8 @@ gulp.task('images', function(tmp) {
 
 //compressing images & handle SVG files
 gulp.task('images-deploy', function() {
-    gulp.src(['app/images/**/*', '!app/images/README'])
-        //prevent pipe breaking caused by errors from gulp plugins
+    gulp.src(['app/images/**/*'])
+    //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
         .pipe(gulp.dest('dist/images'));
 });
@@ -56,94 +56,99 @@ gulp.task('images-deploy', function() {
 gulp.task('scripts', function() {
     //this is where our dev JS scripts are
     return gulp.src(['app/scripts/src/_includes/**/*.js', 'app/scripts/src/**/*.js'])
-                //prevent pipe breaking caused by errors from gulp plugins
-                .pipe(plumber())
-                //this is the filename of the compressed version of our JS
-                .pipe(concat('app.js'))
-                //catch errors
-                .on('error', gutil.log)
-                //where we will store our finalized, compressed script
-                .pipe(gulp.dest('app/scripts'))
-                //notify browserSync to refresh
-                .pipe(browserSync.reload({stream: true}));
+    //prevent pipe breaking caused by errors from gulp plugins
+        .pipe(plumber())
+        //this is the filename of the compressed version of our JS
+        .pipe(concat('app.js'))
+        //catch errors
+        .on('error', gutil.log)
+        //where we will store our finalized, compressed script
+        .pipe(gulp.dest('app/scripts'))
+        //notify browserSync to refresh
+        .pipe(browserSync.reload({stream: true}));
 });
 
 //compiling our Javascripts for deployment
 gulp.task('scripts-deploy', function() {
     //this is where our dev JS scripts are
     return gulp.src(['app/scripts/src/_includes/**/*.js', 'app/scripts/src/**/*.js'])
-                //prevent pipe breaking caused by errors from gulp plugins
-                .pipe(plumber())
-                //this is the filename of the compressed version of our JS
-                .pipe(concat('app.js'))
-                //compress :D
-                .pipe(uglify())
-                //where we will store our finalized, compressed script
-                .pipe(gulp.dest('dist/scripts'));
+    //prevent pipe breaking caused by errors from gulp plugins
+        .pipe(plumber())
+        //this is the filename of the compressed version of our JS
+        .pipe(concat('app.js'))
+        //compress :D
+        .pipe(uglify())
+        //where we will store our finalized, compressed script
+        .pipe(gulp.dest('dist/scripts'));
 });
 
 //compiling our SCSS files
 gulp.task('styles', function() {
     //the initializer / master SCSS file, which will just be a file that imports everything
     return gulp.src('app/styles/scss/init.scss')
-                //prevent pipe breaking caused by errors from gulp plugins
-                .pipe(plumber({
-                  errorHandler: function (err) {
-                    console.log(err);
-                    this.emit('end');
-                  }
-                }))
-                //get sourceMaps ready
-                .pipe(sourceMaps.init())
-                //include SCSS and list every "include" folder
-                .pipe(sass({
-                      errLogToConsole: true,
-                      includePaths: [
-                          'app/styles/scss/'
-                      ]
-                }))
-                .pipe(
-                    postcss([
-                        require('postcss-font-magician')({ /* options */ })
-                    ])
-                )
-                .pipe(rucksack())
-                .pipe(autoprefixer({
-                   browsers: autoPrefixBrowserList,
-                   cascade:  true
-                }))
-                //catch errors
-                .on('error', gutil.log)
-                //the final filename of our combined css file
-                .pipe(concat('styles.css'))
-                //get our sources via sourceMaps
-                .pipe(sourceMaps.write())
-                //where to save our final, compressed css file
-                .pipe(gulp.dest('app/styles'))
-                //notify browserSync to refresh
-                .pipe(browserSync.reload({stream: true}));
+    //prevent pipe breaking caused by errors from gulp plugins
+        .pipe(plumber({
+            errorHandler: function (err) {
+                console.log(err);
+                this.emit('end');
+            }
+        }))
+        //get sourceMaps ready
+        .pipe(sourceMaps.init())
+        //include SCSS and list every "include" folder
+        .pipe(sass({
+            errLogToConsole: true,
+            includePaths: [
+                'app/styles/scss/'
+            ]
+        }))
+        .pipe(
+            postcss([
+                require('postcss-font-magician')({ /* options */ })
+            ])
+        )
+        .pipe(
+            rucksack({
+                autoprefixer: true
+            })
+        )
+        // .pipe(autoprefixer({
+        //    browsers: autoPrefixBrowserList,
+        //    cascade:  true
+        // }))
+        //catch errors
+        // .on('error', gutil.log)
+        //the final filename of our combined css file
+        .pipe(concat('styles.css'))
+        //get our sources via sourceMaps
+        .pipe(sourceMaps.write())
+        //where to save our final, compressed css file
+        .pipe(gulp.dest('app/styles'))
+        //notify browserSync to refresh
+        .pipe(browserSync.reload({stream: true}));
 });
 
 //compiling our SCSS files for deployment
 gulp.task('styles-deploy', function() {
     //the initializer / master SCSS file, which will just be a file that imports everything
     return gulp.src('app/styles/scss/init.scss')
-                .pipe(plumber())
-                //include SCSS includes folder
-                .pipe(sass({
-                      includePaths: [
-                          'app/styles/scss',
-                      ]
-                }))
-                .pipe(autoprefixer({
-                  browsers: autoPrefixBrowserList,
-                  cascade:  true
-                }))
-                //the final filename of our combined css file
-                .pipe(concat('styles.css'))
-                .pipe(cleanCSS())
-                //where to save our final, compressed css file
-                .pipe(gulp.dest('dist/styles'));
+        .pipe(plumber())
+        //include SCSS includes folder
+        .pipe(sass({
+            includePaths: [
+                'app/styles/scss',
+            ]
+        }))
+        .pipe(
+            rucksack({
+                autoprefixer: true
+            })
+        )
+        //the final filename of our combined css file
+        .pipe(concat('styles.css'))
+        .pipe(cleanCSS())
+        //where to save our final, compressed css file
+        .pipe(gulp.dest('dist/styles'));
 });
 
 //basically just keeping an eye on all HTML files
@@ -160,24 +165,24 @@ gulp.task('html', function() {
 gulp.task('html-deploy', function() {
     //grab everything, which should include htaccess, robots, etc
     gulp.src('app/*')
-        //prevent pipe breaking caused by errors from gulp plugins
+    //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
         .pipe(gulp.dest('dist'));
 
     //grab any hidden files too
     gulp.src('app/.*')
-        //prevent pipe breaking caused by errors from gulp plugins
+    //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
         .pipe(gulp.dest('dist'));
 
     gulp.src('app/fonts/**/*')
-        //prevent pipe breaking caused by errors from gulp plugins
+    //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
         .pipe(gulp.dest('dist/fonts'));
 
     //grab all of the styles
     gulp.src(['app/styles/*.css', '!app/styles/styles.css'])
-        //prevent pipe breaking caused by errors from gulp plugins
+    //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
         .pipe(gulp.dest('dist/styles'));
 });
@@ -185,20 +190,20 @@ gulp.task('html-deploy', function() {
 //cleans our dist directory in case things got deleted
 gulp.task('clean', function() {
     return shell.task([
-      'rm -rf dist'
+        'rm -rf dist'
     ]);
 });
 
 //create folders using shell
 gulp.task('scaffold', function() {
-  return shell.task([
-      'mkdir dist',
-      'mkdir dist/fonts',
-      'mkdir dist/images',
-      'mkdir dist/scripts',
-      'mkdir dist/styles'
-    ]
-  );
+    return shell.task([
+            'mkdir dist',
+            'mkdir dist/fonts',
+            'mkdir dist/images',
+            'mkdir dist/scripts',
+            'mkdir dist/styles'
+        ]
+    );
 });
 
 //this is our master task when you run `gulp` in CLI / Terminal
